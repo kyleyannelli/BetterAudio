@@ -1,4 +1,4 @@
-from pedalboard import Pedalboard, Compressor, Gain, NoiseGate, Reverb
+from pedalboard import Pedalboard, Compressor, Gain, NoiseGate
 from pedalboard.io import AudioStream
 import signal
 import sys
