@@ -41,7 +41,7 @@ def start_stream():
       output_device_name="BlackHole 2ch" # Output to BlackHole so it can be used on things like OBS & Discord
     ) as stream:
       stream.plugins = Pedalboard([
-        NoiseGate(threshold_db=-45, ratio=4, attack_ms=1.0, release_ms=100.0),
+        NoiseGate(threshold_db=-60, ratio=4, attack_ms=1.0, release_ms=100.0),
         Compressor(threshold_db=-20, ratio=4, attack_ms=10, release_ms=200),
         Gain(gain_db=20),
         Compressor(threshold_db=-10, ratio=4, attack_ms=10, release_ms=200),
@@ -56,19 +56,21 @@ def start_stream():
           print("Input device " + input_device_name + " is  no longer available...")
           raise Exception("Selected input device no longer exists!")
 
-def start_stream_exceptionally():
-  try:
-    start_stream()
-  except Exception as e:
-    if not running:
-      return
 
-    if not is_input_available():
-      print("Couldn't find the input device, retrying in 5 seconds.")
-      time.sleep(5)
-      start_stream_exceptionally()
-    else:
-      print(e)
+def start_stream_exceptionally():
+  while running:
+    try:
+      start_stream()
+    except Exception as e:
+      if not running:
+        return
+
+      if not is_input_available():
+        print("Couldn't find the input device, retrying in 5 seconds.")
+        time.sleep(5)
+      else:
+        print(e)
+
 
 start_stream_exceptionally()
 
